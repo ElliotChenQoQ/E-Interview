@@ -2,8 +2,14 @@
 # 這個 .gitignore 檔案由 Microsoft(R) Visual Studio 自動建立。
 ################################################################################
 
-/.vs
+# 忽略所有的 bin, obj, .vs文件夾
+**/bin/
+**/obj/
+**/.vs/
 
-/web-api/WebApplication1/obj
-/web-api/.vs
-/web-api/WebApplication1/bin/
+# 忽略所有以 .log 結尾的文件
+*.log
+
+# 忽略所有的 node_modules 文件夾
+**/node_modules/
+

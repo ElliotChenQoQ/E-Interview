@@ -1,0 +1,15 @@
+@startuml
+
+package "系統功能" {
+
+  actor 使用者 as User
+
+  usecase 資料同步 as "資料同步"
+  usecase 公司代號查詢 as "公司代號查詢"
+
+  User --> 資料同步 : 點擊下載資料
+  User --> 公司代號查詢 : 輸入公司代號查詢營收
+
+}
+
+@enduml

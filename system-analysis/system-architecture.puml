@@ -1,0 +1,27 @@
+@startuml
+
+package "展示層 (Web 專案 Vue 3)" {
+  component "Web Application" as VueApp
+}
+
+package ".NET 6" {
+
+  package "業務邏輯層" {
+    component "API Controller" as API
+    component "Service" as Service
+  }
+
+  package "資料層" {
+    component "Repository" as Repo
+    component "  MS SQL  " as MSSQL
+  }
+
+  component "Swagger UI" as Swagger #lightgrey
+}
+
+VueApp --> API : 調用 Web API
+API --> Service : 調用服務層
+Service --> Repo : 使用資料存取
+Repo --> MSSQL : 數據查詢與操作 
+Swagger --> API : 提供介面開發用
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+entity "Company" {
+  * CompanyID : INT <<PK>>
+  * CompanyName : VARCHAR(100)
+  * Industry : VARCHAR(100)
+}
+
+entity "CompanyRevenue" {
+  * CompanyID : INT <<FK>>
+  * YearMonth : CHAR(6) <<PK>>
+  * ReportDate : CHAR(10)
+  * CurrentMonthRevenue : DECIMAL(18,4)
+  * LastMonthRevenue : DECIMAL(18,4)
+  * LastYearRevenue : DECIMAL(18,4)
+  * MonthGrowth : DECIMAL(18,4)
+  * YearGrowth : DECIMAL(18,4)
+  * CumulativeMonthRevenue : DECIMAL(18,4)
+  * CumulativeLastYearRevenue : DECIMAL(18,4)
+  * CumulativeGrowth : DECIMAL(18,4)
+  * Remarks : VARCHAR(100)
+}
+
+' Relationships between entities
+Company "1" -down-> "CompanyRevenue": Has Revenues
+
+@enduml

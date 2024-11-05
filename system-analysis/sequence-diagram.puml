@@ -1,0 +1,94 @@
+@startuml
+actor User
+participant "ErrorHandlingMiddleware" as ErrorMiddleware
+participant "LogActionFilter" as LogFilter
+participant "CompaniesController" as Controller
+participant "IMediator" as Mediator
+participant "SyncRevenueDataHandler" as SyncHandler
+participant "GetCompanyRevenuesHandler" as GetHandler
+participant "ICompanyService" as Service
+participant "CompanyRepository" as Repository
+
+User -> ErrorMiddleware: /revenues/sync
+activate ErrorMiddleware
+
+ErrorMiddleware -> LogFilter: ActionExecuting
+activate LogFilter
+deactivate LogFilter
+
+ErrorMiddleware -> Controller: Invoke()
+activate Controller
+
+Controller -> Mediator: Send(SyncRevenueDataCommand)
+activate Mediator
+
+Mediator -> SyncHandler: Handle(SyncRevenueDataCommand)
+activate SyncHandler
+
+SyncHandler -> Service: Process CSV Data
+activate Service
+Service -> Repository: Insert Records
+activate Repository
+Repository --> Service: Insertion Complete
+deactivate Repository
+Service --> SyncHandler: Insertion Complete
+deactivate Service
+
+SyncHandler --> Mediator: Unit.Value
+deactivate SyncHandler
+
+Mediator --> Controller: Unit.Value
+deactivate Mediator
+
+Controller -> LogFilter: ActionExecuted
+activate LogFilter
+deactivate LogFilter
+
+Controller --> ErrorMiddleware: HTTP 200 OK
+deactivate Controller
+
+ErrorMiddleware --> User: HTTP 200 OK
+deactivate ErrorMiddleware
+
+User -> ErrorMiddleware: /revenues/{companyId}
+activate ErrorMiddleware
+
+ErrorMiddleware -> LogFilter: ActionExecuting
+activate LogFilter
+deactivate LogFilter
+
+ErrorMiddleware -> Controller: Invoke()
+activate Controller
+
+Controller -> Mediator: Send(GetCompanyRevenuesQuery)
+activate Mediator
+
+Mediator -> GetHandler: Handle(GetCompanyRevenuesQuery)
+activate GetHandler
+
+GetHandler -> Service: GetCompanyRevenuesAsync(companyId)
+activate Service
+Service -> Repository: Query Company Revenues
+activate Repository
+Repository --> Service: Revenues Data
+deactivate Repository
+Service --> GetHandler: Revenues Data
+deactivate Service
+
+GetHandler --> Mediator: Revenues Data
+deactivate GetHandler
+
+Mediator --> Controller: Revenues Data
+deactivate Mediator
+
+Controller -> LogFilter: ActionExecuted
+activate LogFilter
+deactivate LogFilter
+
+Controller --> ErrorMiddleware: HTTP 200 OK
+deactivate Controller
+
+ErrorMiddleware --> User: HTTP 200 OK
+deactivate ErrorMiddleware
+
+@enduml
