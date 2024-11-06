@@ -15,11 +15,7 @@ namespace WebApp.Handlers
 
         public async Task<Unit> Handle(SyncRevenueDataCommand request, CancellationToken cancellationToken)
         {
-            var csvUrl = "https://mopsfin.twse.com.tw/opendata/t187ap05_L.csv";
-            var csvData = await _companyService.GetCsvDataAsync(csvUrl);
-            var csvRecords = _companyService.ParseCsvData(csvData);
-            var records = _companyService.ConvertToInsertRevenue(csvRecords);
-            await _companyService.InsertRevenuesAsync(records);
+            await _companyService.SyncRevenueDataAsync();
 
             return Unit.Value;
         }

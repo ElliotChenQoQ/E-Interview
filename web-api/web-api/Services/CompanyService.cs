@@ -5,6 +5,7 @@ using System.Globalization;
 using WebApp.Models;
 using WebApp.Repositories;
 using WebApp.Services;
+using System;
 
 public class CompanyService : ICompanyService
 {
@@ -17,6 +18,15 @@ public class CompanyService : ICompanyService
         _repository = repository;
         _mapper = mapper;
         _httpClientFactory = httpClientFactory;
+    }
+
+    public async Task SyncRevenueDataAsync()
+    {
+        string csvUrl = "https://mopsfin.twse.com.tw/opendata/t187ap05_L.csv";
+        string csvData = await GetCsvDataAsync(csvUrl);
+        List<CsvCompanyRevenue> csvRecords = ParseCsvData(csvData);
+        List<InsertRevenue> revenueRecords = ConvertToInsertRevenue(csvRecords);
+        await InsertRevenuesAsync(revenueRecords);
     }
 
     public async Task<string> GetCsvDataAsync(string url) =>

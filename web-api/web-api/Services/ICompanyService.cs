@@ -9,5 +9,6 @@ namespace WebApp.Services
         List<CsvCompanyRevenue> ParseCsvData(string csvData);
         List<InsertRevenue> ConvertToInsertRevenue(List<CsvCompanyRevenue> csvRecords);
         Task InsertRevenuesAsync(List<InsertRevenue> records);
+        Task SyncRevenueDataAsync();
     }
 }
